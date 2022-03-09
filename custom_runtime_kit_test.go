@@ -256,6 +256,33 @@ func TestAWSLambdaCustomRuntime_Invoke(t *testing.T) {
 			want:    `{"name":"WinterYukky"}`,
 			wantErr: false,
 		},
+		{
+			name: "String result is output as is",
+			fields: fields{
+				awsLambdaRuntimeAPI: "unit-test-runtime-api",
+				httpClient: NewMockHTTPClient(MockHTTPClientProps{
+					GetEvent: func(req *http.Request) (*http.Response, error) {
+						if req.URL.String() != "http://unit-test-runtime-api/2018-06-01/runtime/invocation/next" {
+							return nil, fmt.Errorf("get event URL is should http://$AWS_LAMBDA_RUNTIME_API/2018-06-01/runtime/invocation/next, got %v", req.URL.String())
+						}
+						return &http.Response{
+							Body: NewBody(`{"key1":"value1"}`),
+						}, nil
+					},
+					Response: func(req *http.Request) (*http.Response, error) {
+						return &http.Response{}, nil
+					},
+				}),
+				runtime: &InstantRuntime{
+					setup: func(env *AWSLambdaRuntimeEnvironemnt) error { return nil },
+					invoke: func(event []byte, context *Context) (interface{}, error) {
+						return `{"name":"WinterYukky"}`, nil
+					},
+				},
+			},
+			want:    `{"name":"WinterYukky"}`,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
