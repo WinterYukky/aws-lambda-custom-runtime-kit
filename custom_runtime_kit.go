@@ -156,7 +156,12 @@ func (a *AWSLambdaCustomRuntime) newContext(env *AWSLambdaRuntimeEnvironemnt, he
 }
 
 func (a *AWSLambdaCustomRuntime) handleResponse(event *Context, value interface{}) error {
-	body, _ := json.Marshal(value)
+	var body []byte
+	if v, ok := value.(string); ok {
+		body = []byte(v)
+	} else {
+		body, _ = json.Marshal(value)
+	}
 	url := fmt.Sprintf("http://%v/2018-06-01/runtime/invocation/%v/response", a.awsLambdaRuntimeAPI, event.RequestID)
 	req, _ := http.NewRequest("POST", url, bytes.NewReader(body))
 	_, err := a.httpClient.Do(req)
