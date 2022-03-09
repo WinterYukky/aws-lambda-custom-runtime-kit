@@ -57,6 +57,8 @@ type AWSLambdaRuntime interface {
 	// Setup before invoke the function handler.
 	Setup(env *AWSLambdaRuntimeEnvironemnt) error
 	// Invoke the function handler and return the result.
+	// When result type is string, then string is output as is.
+	// Else marshal to json string.
 	Invoke(event []byte, context *Context) (interface{}, error)
 	// Cleanup after invoke the function handler.
 	Cleanup(env *AWSLambdaRuntimeEnvironemnt)
