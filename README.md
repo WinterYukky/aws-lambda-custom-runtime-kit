@@ -16,6 +16,15 @@ go get github.com/WinterYukky/aws-lambda-custom-runtime-kit
 Create struct that implemented `AWSLambdaRuntime`, and call `NewAWSLambdaCustomRuntime(runtime).Invoke()`.  
 When result type is string, then string is output as is. Else marshal to json string.
 
+```go
+type AWSLambdaRuntime interface {
+	Setup(env *AWSLambdaRuntimeEnvironemnt) error
+	Invoke(event []byte, context *Context) (interface{}, error)
+	Cleanup(env *AWSLambdaRuntimeEnvironemnt)
+}
+```
+
+
 ### Example
 
 #### Write Custom Runtime
