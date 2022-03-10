@@ -70,8 +70,8 @@ func main() {
 #### Build as bootstrap.
 
 ```shell
-runtime-tutorial$ go build -a -tags netgo -installsuffix netgo --ldflags '-extldflags "-static"' -o bootstrap
-runtime-tutorial$ zip runtime.zip bootstrap
+$ go build -a -tags netgo -installsuffix netgo --ldflags '-extldflags "-static"' -o bootstrap
+$ zip runtime.zip bootstrap
 ```
 
 You can upload runtime.zip and create Lambda layer.
