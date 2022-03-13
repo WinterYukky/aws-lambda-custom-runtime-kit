@@ -90,13 +90,22 @@ func main() {
 	}
 }
 
-// BashRuntime is runtime that execute shell script
+// BashRuntime is runtime that execute shell script.
 type BashRuntime struct {}
 
+// Setup is initialize phase of runtime.
+// You can validate the invoked function in this phase.
+// If you return error, Custom runtime kit responses initialize error to AWS Lambda and finish invoke.
 func (b BashRuntime) Setup(env *crkit.AWSLambdaRuntimeEnvironemnt) error {
 	return nil
 }
 
+// Invoke is invoke phase of runtime.
+// You need implement your runtime's behavior.
+// You can return result and error.
+// If you return error, Custom runtime kit responses invoke error to AWS Lambda and finish invoke.
+// When you return result as string, then custom runtime kit responses string as it is.
+// Else marshal to json string.
 func (b BashRuntime) Invoke(event []byte, context *crkit.Context) (interface{}, error) {
 	source := fmt.Sprintf("%v/%v.sh", context.LambdaTaskRoot, context.Handler)
 	output, err := exec.Command("sh", source).Output()
@@ -107,6 +116,7 @@ func (b BashRuntime) Invoke(event []byte, context *crkit.Context) (interface{}, 
 	return string(output), nil
 }
 
+// Cleanup is shutdown phase of runtime.
 func (b BashRuntime) Cleanup(env *crkit.AWSLambdaRuntimeEnvironemnt) {}
 ```
 
