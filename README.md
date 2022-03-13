@@ -90,6 +90,7 @@ func main() {
 	}
 }
 
+// BashRuntime is runtime that execute shell script
 type BashRuntime struct {}
 
 func (b BashRuntime) Setup(env *crkit.AWSLambdaRuntimeEnvironemnt) error {
@@ -102,7 +103,7 @@ func (b BashRuntime) Invoke(event []byte, context *crkit.Context) (interface{}, 
 	if err != nil {
 		return nil, err
 	}
-    // do not return []byte, cast to string
+        // do not return []byte, cast to string
 	return string(output), nil
 }
 
